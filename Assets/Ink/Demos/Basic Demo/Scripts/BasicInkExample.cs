@@ -13,6 +13,16 @@ public class BasicInkExample : MonoBehaviour {
 		//StartStory();
 	}
 
+	public Animator animator;
+
+	public void ApplyInkTag(string tag)
+	{
+		if (!tag.StartsWith("anim ")) return;
+
+		string animName = tag.Substring(5);
+		animator.Play(animName);
+	}
+
 	public void StartCharacterDialog(TextAsset characterDialog)
 	{
 		RemoveChildren();
@@ -40,6 +50,10 @@ public class BasicInkExample : MonoBehaviour {
 		while (story.canContinue) {
 			// Continue gets the next line of the story
 			string text = story.Continue ();
+			if (story.currentTags != null && story.currentTags.Count > 0)
+			{
+				ApplyInkTag(story.currentTags[0]);
+			}
 			// This removes any white space from the text.
 			text = text.Trim();
 			// Display the text on screen!
@@ -67,7 +81,7 @@ public class BasicInkExample : MonoBehaviour {
 			});
 		}
 	}
-
+	
 	// When we click the choice button, tell the story to choose that choice!
 	void OnClickChoiceButton (Choice choice) {
 		story.ChooseChoiceIndex (choice.index);
